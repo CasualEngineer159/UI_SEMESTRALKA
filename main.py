@@ -232,8 +232,6 @@ data_clean["COUNTRY"], df_legend["COUNTRY"] = encode_column(data_clean["COUNTRY"
 data_clean["PLACE"], df_legend["PLACE"] = encode_column(data_clean["PLACE"])
 data_clean["WHO"], df_legend["WHO"] = encode_column(data_clean["WHO"])
 
-data_clean.to_csv("data_clean.csv")
-
 data_clean = data_clean.drop(columns="YEAR")
 
 def create_corr_matrix(df, name):
@@ -267,3 +265,5 @@ create_corr_matrix(data_clean, "VYBALANCOVANÁ DATA (MPP : PČR = 1 : 1)")
 data_clean = data_clean.drop(columns=["MONTH", "DAY", "HOUR", "WORKDAY"])
 
 create_corr_matrix(data_clean, "VYBALANCOVÁNO + SMAZÁNY NEPODSTATNÉ SLOUPCE")
+
+data_clean.to_csv("data_clean.csv")
