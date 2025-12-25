@@ -36,7 +36,7 @@ prediction_text = le.inverse_transform(prediction_index)
 # Get prediction confidence scores (maximum probability)
 probability = mlp.predict_proba(df_scaled).max(axis=1)
 
-# --- 5. COMPARISON ---
+# --- COMPARISON ---
 # Create a results DataFrame for evaluation
 results = pd.DataFrame({
     "ACTUAL": reality_text,  # Renamed from SKUTECNOST for consistency
@@ -51,7 +51,7 @@ results = pd.DataFrame({
 # Add a boolean column indicating if the prediction was correct
 results["MATCH"] = results["ACTUAL"] == results["PREDICTED"]
 
-# --- 6. STATISTICS ---
+# --- STATISTICS ---
 total_count = len(results)
 correct_count = results["MATCH"].sum()
 accuracy = (correct_count / total_count) * 100
@@ -65,7 +65,7 @@ print(f"Errors:          {total_count - correct_count}")
 print(f"Accuracy:        {accuracy:.2f} %")
 print(f"==========================================\n")
 
-# --- 7. ERROR ANALYSIS (Misclassified instances) ---
+# --- ERROR ANALYSIS (Misclassified instances) ---
 # Filter only rows where the model made a mistake
 errors = results[results["MATCH"] == False]
 
