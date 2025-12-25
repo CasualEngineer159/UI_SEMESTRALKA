@@ -23,3 +23,5 @@ def encode_column(column):
 df["ovoce"], df_legend["ovoce"] = encode_column(df["ovoce"])
 print(df)
 print(df_legend)
+
+#test jestli muzu commitnout
