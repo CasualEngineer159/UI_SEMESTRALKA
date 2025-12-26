@@ -11,7 +11,7 @@ le = joblib.load('model_le.pkl')  # LabelEncoder (maps 0/1 back to class names)
 
 # load original dataset
 print("Loading dataset...")
-df_orig = pd.read_csv("MHMP_dopravni_prestupky_2023.csv")
+df_orig = pd.read_csv("MHMP_dopravni_prestupky_2024.csv")
 
 # process data
 print("Processing data...")
@@ -39,13 +39,13 @@ probability = mlp.predict_proba(df_scaled).max(axis=1)
 # --- COMPARISON ---
 # Create a results DataFrame for evaluation
 results = pd.DataFrame({
-    "ACTUAL": reality_text,  # Renamed from SKUTECNOST for consistency
-    "PREDICTED": prediction_text,  # Renamed from PREDIKCE
-    "CONFIDENCE": probability,  # Renamed from JISTOTA
+    "ACTUAL": reality_text,
+    "PREDICTED": prediction_text,
+    "CONFIDENCE": probability,
     # Context columns to understand the nature of the violation
     "LAW": df_clean["LAW_CLEAN"],
     "CAR": df_clean["CAR_TYPE"],
-    "LOCATION": df_clean["PRAGUE"]
+    "LOCATION": df_clean["PRAGUE"],
 })
 
 # Add a boolean column indicating if the prediction was correct

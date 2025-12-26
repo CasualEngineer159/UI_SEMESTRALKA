@@ -82,8 +82,10 @@ def get_prague_district(n):
 
 def extract_car_brand(text):
     # returns car brand
+
     if not isinstance(text, str) or text == "Neuvedeno":
         return "UNSPECIFIED"
+
     for car in CARS_LIST:
         if car.lower() in text.lower():
             return car
@@ -103,14 +105,18 @@ def process_data(df):
     df["SEASON"] = df["MONTH_NUM"].apply(get_season)
     df["HOUR"] = temp_times.dt.hour.fillna(-1).astype(int)
     df["DAY_TIME"] = df["HOUR"].apply(get_day_time)
+    """
     df["MISSING_TIME"] = (df["HOUR"] == -1).astype(int)
+    """
 
     # prague district
     df["PRAGUE"] = df["PRAHA"].apply(get_prague_district)
 
     # car brand
     df["CAR_TYPE"] = df["TOVZN"].apply(extract_car_brand)
+    """
     df["MISSING_BRAND"] = (df["CAR_TYPE"] == "UNSPECIFIED").astype(int)
+    """
 
     # law
     df["LAW_CLEAN"] = df["PRAVFOR"].apply(get_law)
@@ -119,9 +125,16 @@ def process_data(df):
     df["IS_FIRM"] = (df["FIRMA"] == "ANO").astype(int)
 
     # column list that goes to the training
+    """
     cols_to_keep = [
         "SEASON", "DAY_TIME", "MISSING_TIME", "PRAGUE",
         "CAR_TYPE", "MISSING_BRAND", "LAW_CLEAN", "IS_FIRM"
+    ]
+    """
+
+    cols_to_keep = [
+        "SEASON", "DAY_TIME", "PRAGUE",
+        "CAR_TYPE", "LAW_CLEAN", "IS_FIRM"
     ]
 
     # we need "OZNAM" column for training

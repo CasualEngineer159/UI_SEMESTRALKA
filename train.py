@@ -37,6 +37,7 @@ mlp = MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42)
 mlp.fit(X_train_scaled, y_train)
 print(f"Trénink hotov. Skóre na testu: {mlp.score(scaler.transform(X_test), y_test):.4f}")
 
+
 # 6. Export
 print("Ukládám model...")
 joblib.dump(mlp, 'model_mlp.pkl')
