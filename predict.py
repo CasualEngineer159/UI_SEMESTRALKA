@@ -43,9 +43,13 @@ results = pd.DataFrame({
     "PREDICTED": prediction_text,
     "CONFIDENCE": probability,
     # Context columns to understand the nature of the violation
+    "SEASON" : df_clean["SEASON"],
+    "DAY_TIME" : df_clean["DAY_TIME"],
+    "PRAGUE" : df_clean["PRAGUE"],
+    "PLACE_TYPE" : df_clean["PLACE_TYPE"],
+    "CAR_TYPE" : df_clean["CAR_TYPE"],
     "LAW": df_clean["LAW_CLEAN"],
-    "CAR": df_clean["CAR_TYPE"],
-    "LOCATION": df_clean["PRAGUE"],
+    "IS_FIRM" : df_clean["IS_FIRM"],
 })
 
 # Add a boolean column indicating if the prediction was correct
@@ -71,7 +75,7 @@ errors = results[results["MATCH"] == False]
 
 if not errors.empty:
     print("Sample of 5 misclassified instances:")
-    print(errors[["ACTUAL", "PREDICTED", "CONFIDENCE", "LAW", "CAR"]].head(5))
+    print(errors[["ACTUAL", "PREDICTED", "CONFIDENCE", "LAW", "CAR_TYPE"]].head(5))
 
     # Save errors to CSV for manual inspection in Excel
     errors.to_csv("model_errors.csv", index=False)

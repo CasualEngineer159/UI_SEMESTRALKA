@@ -34,7 +34,9 @@ def get_season(m):
 
 def get_day_time(h):
     # splits hours to 4 day times
-    if 6 <= h < 12:
+    if h == -1:
+        return "none"
+    elif 6 <= h < 12:
         return "morning"
     elif 12 <= h < 18:
         return "afternoon"
@@ -80,6 +82,29 @@ def get_prague_district(n):
     return "Praha - Ostatní"
 
 
+def get_place_type(text):
+    # returns main_street, tunnel, square or other
+    if not isinstance(text, str):
+        return "other"
+
+    text_lower = text.lower()
+
+    # Check for square
+    if "náměstí" in text_lower:
+        return "square"
+
+    # Check for tunnel
+    if "tunel" in text_lower:
+        return "tunnel"
+
+    # Check for main streets from the list
+    for street in MAIN_STREETS_LIST:
+        if street.lower() in text_lower:
+            return "main_street"
+
+    return "other"
+
+
 def extract_car_brand(text):
     # returns car brand
 
@@ -112,6 +137,8 @@ def process_data(df):
     # prague district
     df["PRAGUE"] = df["PRAHA"].apply(get_prague_district)
 
+    df["PLACE_TYPE"] = df["MISTOSK"].apply(get_place_type)
+
     # car brand
     df["CAR_TYPE"] = df["TOVZN"].apply(extract_car_brand)
     """
@@ -133,7 +160,7 @@ def process_data(df):
     """
 
     cols_to_keep = [
-        "SEASON", "DAY_TIME", "PRAGUE",
+        "SEASON", "DAY_TIME", "PRAGUE", "PLACE_TYPE",
         "CAR_TYPE", "LAW_CLEAN", "IS_FIRM"
     ]
 
