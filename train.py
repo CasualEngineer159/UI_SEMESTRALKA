@@ -33,7 +33,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 
 # 5. Training
 print("Trénuji MLP...")
-mlp = MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42)
+mlp = MLPClassifier(hidden_layer_sizes=(40, 20), max_iter=200, random_state=42)
 mlp.fit(X_train_scaled, y_train)
 print(f"Trénink hotov. Skóre na testu: {mlp.score(scaler.transform(X_test), y_test):.4f}")
 
