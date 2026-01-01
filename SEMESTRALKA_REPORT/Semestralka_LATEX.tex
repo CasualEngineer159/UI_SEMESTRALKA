@@ -1,0 +1,301 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+
+\setlength{\parskip}{0.9em}
+\setlength{\parindent}{0pt}
+
+\title{Umělá inteligence - semestrální projekt \\[0.5em]
+\large Analýza dat a aplikace vybrané metody strojového učení}
+\author{
+    Ondřej Chalupa \\ \texttt{chaluon3@student.cvut.cz}
+    \and
+    Matěj Hrdlička \\ \texttt{hrdlima8@student.cvut.cz}
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Pokyny k práci}
+Tento dokument slouží jako závazná šablona reportu. Vyplňte jednotlivé sekce v uvedeném rozsahu.  \\
+Práce se řeší \emph{ve dvojicích}.
+
+Datové sady musí pocházet z \emph{reálných nebo otevřených zdrojů} (ne knihovní benchmarky jako \texttt{Iris}, \texttt{MNIST}, \texttt{Breast Cancer}, \texttt{Wine}, apod.).  \\
+
+Je povoleno využívat nástroje generativní AI (např. ChatGPT, Copilot). V závěru práce musí být uvedeno samostatné prohlášení popisující, k čemu byla AI využita (pouze pokud byla skutečně využita) (např. konzultace postupu, generování části kódu, kontrola textu). Využití AI však nesmí nahrazovat vlastní porozumění — každý student musí být schopen při ústním zkoušení detailně vysvětlit použitou metodu, její parametry, datovou přípravu, kód i interpretaci výsledků. Nesplnění této podmínky může ovlivnit hodnocení práce i ústní část zkoušky.
+
+Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
+
+% --------------------------------------------------------------------
+
+\section{Možné otevřené zdroje dat}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Kaggle Datasets:} \url{https://www.kaggle.com/datasets}
+    \item \textbf{Google Dataset Search:} \url{https://datasetsearch.research.google.com}
+    \item \textbf{UCI Machine Learning Repository (vyjma známých benchmarků):}  \\
+          \url{https://archive.ics.uci.edu}
+    \item \textbf{OpenML (vyhýbat se klasickým učebnicovým datasetům):}  \\
+          \url{https://www.openml.org}
+    \item \textbf{Data.gov (USA):} \url{https://www.data.gov}
+    \item \textbf{EU Open Data Portal:} \url{https://data.europa.eu}
+    \item \textbf{České otevřené datové portály:}  \\
+    \begin{itemize}
+        \item \url{https://data.gov.cz}  
+        \item \url{https://opendata.praha.eu}  
+        \item \url{https://opendata.brno.cz}
+    \end{itemize}
+    \item \textbf{OpenWeather, NOAA a další meteorologická data}
+    \item \textbf{GitHub repozitáře s raw daty} (např. data ze senzorů, logů apod.)
+    \item \textbf{Data z vlastního okolí} (pokud nejsou osobní – např. logy z chytré domácnosti, sportovní senzorika apod.)
+\end{itemize}
+
+% --------------------------------------------------------------------
+
+\section{Úvod}
+
+\begin{itemize}
+    \item \textbf{Stručné představení vybrané metody a problému}
+    
+    Tato práce se zabývá aplikací strojového učení, konkrétně metody vícevrstvého perceptronu, na oblast analýzy dopravních přestupků v hlavním městě Praze. Data o dopravních přestupcích nám přišla zajímavá. Zjistili jsme, že záznamy o dopravních přestupcích v Praze přidává buď Policie České republiky, nebo Městská policie Praha. Chtěli jsme zjistit, jestli je možné na základě toho, že víme, kdy, kde a jaký přestupek byl spáchán, určit, zda přestupek řešila Policie České republiky, nebo Městská policie Praha.
+
+    \item \textbf{Odůvodnění výběru dat a jejich relevance}
+    
+    Data jsme našli na portálu Open Data hlavního města Prahy. Na základě toho, že nám data o dopravních přestupcích přišla zajímavá, jsme si vymysleli problém, který s nimi můžeme vyřešit.
+
+    \item \textbf{Struktura práce}
+    
+    Práce se skládá z několika souborů. První soubor \texttt{data\_process.py} obsahuje kód, který připraví data pro trénování nebo pro použití modelu na predikci. Soubor \texttt{train.py} obsahuje kód pro vytrénování modelu na datech a \texttt{predict.py} použije model pro predikci a určí jeho přesnost.
+\end{itemize}
+
+% --------------------------------------------------------------------
+
+\section{Popis datové sady}
+
+% Hlavní seznam dle struktury na obrázku
+\begin{itemize}[leftmargin=*]
+
+    % 1. BOD: PŮVOD DAT
+    \item \textbf{Původ dat (zdroj a odkazy)}
+    
+    Data pocházejí z~portálu Open Data hlavního města Prahy a jsou vedena pod názvem \emph{Dopravní přestupky MHMP}. Pro trénování modelu byla zvolena data z~roku 2023, zatímco pro validaci a testování byly využity sady z~let 2022 a 2024.
+    
+    \noindent \textbf{Odkazy na zdroje:}
+    \begin{itemize}
+        \item Rok 2022: \href{https://opendata.praha.eu/dataset/dopravni-prestupky-mhmp-2022}{Dopravní přestupky MHMP 2022}
+        \item Rok 2023: \href{https://opendata.praha.eu/dataset/dopravni-prestupky-mhmp-2023}{Dopravní přestupky MHMP 2023}
+        \item Rok 2024: \href{https://opendata.praha.eu/dataset/dopravni-prestupky-mhmp-2024}{Dopravní přestupky MHMP 2024}
+    \end{itemize}
+
+    % 2. BOD: ATRIBUTY, VELIKOST, ČAS
+    \item \textbf{Typy atributů, velikost a časové pokrytí}
+    
+    Datasety pokrývají období od ledna 2022 do června 2024. Sady z~let 2022 a 2023 obsahují záznamy za celých 12 měsíců, dataset z~roku 2024 obsahuje data pouze za první polovinu roku. Celkový přehled uvádí Tabulka~\ref{tab:pocty_zaznamu}.
+    
+    \begin{table}[h!]
+        \centering
+        \caption{Přehled počtu záznamů v~jednotlivých letech}
+        \label{tab:pocty_zaznamu}
+        \begin{tabular}{l c r}
+            \hline
+            \textbf{Dataset} & \textbf{Časové pokrytí} & \textbf{Počet záznamů} \\
+            \hline
+            MHMP 2022 & Leden -- Prosinec & 846\,832 \\
+            MHMP 2023 & Leden -- Prosinec & 946\,701 \\
+            MHMP 2024 & Leden -- Červen & 372\,084 \\
+            \hline
+            \textbf{Celkem} & & \textbf{2\,165\,617} \\
+            \hline
+        \end{tabular}
+    \end{table}
+
+    Každý záznam reprezentuje jeden evidovaný přestupek. Mezi klíčové atributy patří:
+    \begin{description}
+        \item[Časové údaje:] Datum (\emph{2022-04-15}) a Čas (\emph{09:14}).
+        \item[Lokalizace:] Místo (\emph{Lohniského 4}) a Čtvrť (\emph{Praha 5}).
+        \item[Subjekty:] Oznamovatel (\emph{MPP/PČR}), Státní příslušnost (\emph{CZ}), Značka vozidla.
+        \item[Právní kvalifikace:] Porušený zákon (např. \emph{§ 125d zák. č. 361/2000 Sb.}).
+    \end{description}
+
+    % 3. BOD: EXPLORATORNÍ ANALÝZA
+    \item \textbf{Exploratorní analýza: statistiky, distribuce a grafy}
+    
+    Analýza provedená na datech z~roku 2023 odhalila následující charakteristiky:
+    \begin{itemize}
+        \item \textbf{Distribuční poměr oznamovatelů:} Data vykazují silnou převahu záznamů od Městské policie (MPP), která tvoří přibližně 91,6\,\% datasetu (866\,709 záznamů). Policie ČR (PČR) se podílí zbylými 8,4\,\%.
+        
+        \item \textbf{Geografické rozložení:} Přestupky jsou nejčastěji evidovány v~obvodech \textbf{Praha 4} (207\,400 záznamů) a \textbf{Praha 6} (167\,246 záznamů). Centrum města (Praha 1) je v~četnosti až čtvrté.
+        
+        \item \textbf{Typy přestupků:} Nejčastějším porušením je §~125c odst.~1 písm.~k) (nedovolené zastavení/stání). Významnou část tvoří i překročení rychlosti do 20 km/h v~obci.
+        
+        \item \textbf{Struktura chybějících dat:} Atributy jako Datum či Oznamovatel jsou vyplněny vždy. Nejvíce chybějících hodnot vykazuje:
+        \begin{itemize}
+            \item tovární značka vozidla - 12.4\%
+            \item čas - 4.6\%
+            \item státní příslušnost - 	2.4\%
+            
+        \end{itemize}
+ 
+    \end{itemize}
+
+    % 4. BOD: IDENTIFIKACE PROBLÉMŮ
+    \item \textbf{Identifikace problémů datasetu (nevyváženost, šum, chybějící hodnoty)}
+    
+    Během přípravy dat byly identifikovány tyto problémy:
+    
+    \begin{itemize}
+        \item \textbf{Vysoká nevyváženost tříd:} Poměr MPP vůči PČR je cca 11:1.
+        
+        \item \textbf{Nekonzistentní označování:} Atribut právní kvalifikace obsahuje duplicitní významy (např. dlouhý zápis \texttt{§ 125c odst. 1...} vs. zkrácený \texttt{§ 125c/1k...}).
+        
+        \item \textbf{Chybějící hodnoty:} Atribut \textit{TOVZN} (Tovární značka) chybí u~12,4\,\% záznamů, atribut \textit{CASSK} (Čas) u~4,5\,\% záznamů.
+        
+        \item \textbf{Nestrukturovaný text:} Atribut \textit{MISTOSK} obsahuje volný text s~překlepy a nejednotným formátováním (např.: \textit{Maltézské náměstí 16, Praha 1, u domu})
+    \end{itemize}
+
+    % 5. BOD: PROFILING
+    \item \textbf{Profil dat (ydata-profiling)}
+    
+    Detailní automaticky generovaný profil datové sady vytvořený nástrojem \texttt{ydata-profiling} je přiložen v~Příloze~A.
+
+\end{itemize}
+
+
+% --------------------------------------------------------------------
+
+\section{Formulace cíle (0.5 strany)}
+\begin{itemize}[leftmargin=*]
+    \item Přesná formulace predikčního/klasifikačního cíle.
+    \item Typ úlohy a zdůvodnění výběru metody.
+\end{itemize}
+
+% --------------------------------------------------------------------
+
+\section{Předzpracování dat}
+
+Tato kapitola popisuje technické kroky vedoucí k transformaci surových dat do podoby vhodné pro trénování klasifikačního modelu. Proces zahrnoval čištění dat, extrakci nových příznaků (feature engineering) a finální selekci atributů na základě jejich statistické významnosti.
+
+\begin{itemize}[leftmargin=*]
+    
+    % 1. BOD: VYŘEŠENÉ PROBLÉMY
+    \item \textbf{Vyřešené datové problémy a popis postupů}
+    
+    Na základě závěrů exploratorní analýzy byly adresovány následující nedostatky v kvalitě a struktuře dat:
+    \begin{itemize}
+        \item \textbf{Nestrukturovaný text u lokace:} Atribut \textit{MISTOSK} původně obsahoval volný text kombinující názvy ulic, čísla popisná a další upřesnění (např. \uv{před domem č.p. 5}). Pro potřeby modelování bylo nutné tento text kategorizovat. Pomocí regulárních výrazů a vyhledávání klíčových slov (např. \uv{tunel}, \uv{náměstí}, \uv{Evropská}, \uv{spojka}) byly záznamy rozděleny do čtyř obecných tříd: \textit{náměstí, tunel, hlavní ulice} a \textit{ostatní}.
+        
+        \item \textbf{Nekonzistentní zápis zákonů:} Atribut \textit{ZAKON} vykazoval vysokou variabilitu v zápisu totožných přestupků (rozdílné mezery, zkratky odstavců). Byla provedena normalizace textu, kdy byly pomocí vzorů (regex) sjednoceny varianty zápisu na základní tvar paragrafu a odstavce (např. unifikace na \texttt{§125c/1k}).
+        
+        \item \textbf{Chybějící a odlehlé hodnoty:} U atributu tovární značky (\textit{TOVZN}) byla chybějící data (cca 12\,\%) imputována zástupnou hodnotou \texttt{UNSPECIFIED}. V případě chybějící státní příslušnosti byla použita hodnota \texttt{UNKNOWN}. Pokud u záznamu chyběl čas nebo byl v chybném formátu, byla hodina přestupku nastavena na indikátor \texttt{-1}.
+    \end{itemize}
+
+    % 2. BOD: KROKY PŘEDZPRACOVÁNÍ
+    \item \textbf{Kroky předzpracování (transformace a tvorba příznaků)}
+    
+    Cílem transformací bylo snížit dimenzionalitu dat a zachytit obecnější trendy namísto specifických detailů, které by mohly vést k přeučení modelu.
+    
+    \begin{description}
+        \item[Časové atributy:] 
+        Ze spojitého času byla vytvořena sada kategorických příznaků s cílem zachytit cyklické chování a trendy. Konkrétně byly derivovány:
+        \begin{itemize}
+            \item \textbf{Měsíc} (1--12).
+            \item \textbf{Hodina} (0--11), pro chybějící čas nahrazeno hodnotou \texttt{-1}.
+            \item \textbf{Typ dne} (binární rozdělení na pracovní den a víkend).
+            \item \textbf{Roční období} (jaro, léto, podzim, zima).
+            \item \textbf{Denní doba} (ráno, odpoledne, večer, noc); v případě chybějícího času nastaveno jako \texttt{none}.
+        \end{itemize}
+        
+        \item[Typ vozidla (\texttt{CAR\_TYPE}):] 
+        Atribut značky vozidla byl diskretizován dle předem vytvořeného seznamu nejfrekventovanějších značek (např. \textit{Škoda, Volvo, Hyundai}). Značky s nižším výskytem, které nebyly součástí seznamu, byly sloučeny do kategorie \texttt{OTHER}. Záznamy bez uvedené značky byly označeny jako \texttt{UNSPECIFIED}.
+    \end{description}
+
+    % 3. BOD: ZDŮVODNĚNÍ VÝBĚRU
+    \item \textbf{Zdůvodnění výběru atributů}
+    
+    Finální sada atributů pro trénování byla zvolena na základě analýzy korelací a iterativního testování výkonu modelu. Byla vypočtena korelační matice (viz Obrázek~\ref{fig:corr_matrix}), která vizualizuje vztahy mezi nově vytvořenými příznaky a cílovou proměnnou \textit{OZNAM}.
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1\textwidth]{correlation_matrix.png}
+        \caption{Korelační matice finálních atributů (vizualizace závislosti mezi extrahovanými příznaky)}
+        \label{fig:corr_matrix}
+    \end{figure}
+    
+    Na základě této analýzy byly pro finální trénink modelu vybrány atributy: \texttt{SEASON}, \texttt{DAY\_TIME}, \texttt{PRAGUE}, \texttt{PLACE\_TYPE}, \texttt{CAR\_TYPE}, \texttt{LAW\_CLEAN} a \texttt{IS\_FIRM}.
+
+\end{itemize}
+% --------------------------------------------------------------------
+
+\section{Metoda strojového učení (1–2 strany)}
+\begin{itemize}[leftmargin=*]
+    \item Princip a stručný matematický popis.
+    \item Popis parametrů a jejich nastavení.
+    \item U složitějších metod popis architektury nebo strategie ladění.
+\end{itemize}
+
+% --------------------------------------------------------------------
+
+\section{Experimenty a výsledky (2–3 strany)}
+\begin{itemize}[leftmargin=*]
+    \item Oddělení trénovacích, validačních a testovacích dat.
+    \item Baseline, hyperparametrické ladění, cross-validation (pokud vhodné).
+    \item Vybrané metriky:
+    \begin{itemize}
+        \item regrese: MSE, RMSE, MAE, $R^2$, Adjusted $R^2$,
+        \item klasifikace: accuracy, precision, recall, F1, AUC-ROC, confusion matrix.
+    \end{itemize}
+    \item Grafy: průběhy učení, ROC, predikce vs. realita.
+    \item Interpretace výsledků – co znamenají a proč jsou takové.
+\end{itemize}
+
+% --------------------------------------------------------------------
+
+\section{Diskuse (1 strana)}
+\begin{itemize}[leftmargin=*]
+    \item Zhodnocení silných a slabých stránek výsledku.
+    \item Co fungovalo a co ne, a proč.
+    \item Možné alternativy a budoucí vylepšení.
+\end{itemize}
+
+% --------------------------------------------------------------------
+
+\section{Závěr (0.5–1 strana)}
+\begin{itemize}[leftmargin=*]
+    \item Shrnutí postupu a klíčových výsledků.
+    \item Vyjádření, zda byl cíl splněn a proč.
+    \item Krátký přehled naučených poznatků.
+\end{itemize}
+
+% --------------------------------------------------------------------
+\newpage
+
+\section*{Prohlášení o využití generativní AI (pokud relevantní)}
+Tato sekce je povinná pouze v případě, že byla při zpracování projektu využita generativní umělá inteligence.
+\
+\textbf{Vzorové prohlášení:}
+\
+\begin{quote}
+V rámci vypracování této semestrální práce jsme využili nástroje generativní umělé inteligence (např. ChatGPT, Gemini, Mistral, GitHub Copilot) k následujícím účelům: \
+\begin{itemize}
+    \item konzultace teoretického postupu a ověření správnosti vysvětlení,
+    \item návrh části kódu / kontrola kódu,
+    \item jazyková korektura textu.
+\end{itemize}
+Veškerým použitým postupům, kódu i interpretaci výsledků rozumíme a jsme schopni je samostatně vysvětlit v rámci ústního zkoušení. Současně bereme na vědomí, že plně odpovídáme za správnost obsahu, výpočtů, kódu i závěrů uvedených v této práci.
+\end{quote}
+
+\section*{Přílohy}
+\begin{itemize}[leftmargin=*]
+    \item Výstupy profilování dat.
+    \item Vybrané části kódu.
+    \item Dodatečné grafy a tabulky.
+\end{itemize}
+
+\end{document}
