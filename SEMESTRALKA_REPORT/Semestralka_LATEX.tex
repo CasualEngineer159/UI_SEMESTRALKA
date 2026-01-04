@@ -170,10 +170,16 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
 
 % --------------------------------------------------------------------
 
-\section{Formulace cíle (0.5 strany)}
+\section{Formulace cíle}
 \begin{itemize}[leftmargin=*]
-    \item Přesná formulace predikčního/klasifikačního cíle.
-    \item Typ úlohy a zdůvodnění výběru metody.
+    \item \textbf{Přesná formulace predikčního/klasifikačního cíle.}
+    
+    Hlavním cílem této semestrální práce je navrhnout, natrénovat a vyhodnotit model strojového učení, který bude schopen rozlišit, kdo zaznamenal dopravní přestupek na území hlavního města Prahy. Konkrétně se jedná o rozlišení mezi Městská policie Praha a Policie České republiky.
+    \item \textbf{Typ úlohy a zdůvodnění výběru metody.}
+
+    Z hlediska strojového učení se jedná o úlohu učení s učitelem, konkrétně o binární klasifikaci.
+    Pro řešení úlohy byla zvolena metoda Vícevrstvého perceptronu. Předpokládáme že vztahy mezi vstupními daty a cílovou třídou jsou komplikované ale je v nich možné najít nějaký pattern, na základě kterého se policie pohybuje. Například ulice "Evropská" může implikovat PČR v noci (měření rychlosti), ale MPP ve dne (parkování). proto jsme zvolili metodu MLP která by tyto vztahy mohla najít.
+    
 \end{itemize}
 
 % --------------------------------------------------------------------
@@ -232,28 +238,80 @@ Tato kapitola popisuje technické kroky vedoucí k transformaci surových dat do
 
 \end{itemize}
 % --------------------------------------------------------------------
+\newpage
+\section{Metoda strojového učení}
+    Pro řešení úlohy byla zvolena metoda Vícevrstvého perceptronu (MLP). Jedná se o dopřednou umělou neuronovou síť (Feedforward Neural Network), která se skládá z jedné vstupní vrstvy, jedné či více skrytých vrstev a jedné výstupní vrstvy.
 
-\section{Metoda strojového učení (1–2 strany)}
-\begin{itemize}[leftmargin=*]
-    \item Princip a stručný matematický popis.
-    \item Popis parametrů a jejich nastavení.
-    \item U složitějších metod popis architektury nebo strategie ladění.
-\end{itemize}
+    Základním stavebním kamenem je umělý neuron, který provádí vážený součet svých vstupů, přičítá k němu prahovou hodnotu (bias) a výsledek transformuje pomocí nelineární aktivační funkce. Díky vrstvení těchto neuronů a použití nelinearit je MLP schopen aproximovat i velmi složité rozhodovací hranice v mnohadimenzionálním prostoru příznaků, což je pro naše kategorická data klíčové.
+    
+    My jsme pro vytvoření modelu jsme použili knihovnu \texttt{scikit-learn} a třídu \texttt{MLPClassifier}. Na základě experimentů s počtem neuronů a skrytých vrstev byla zvolena arhitektura s dvěmi skrytými vrtsvami. První skrytá vrstva s 50 neurony a druhá s 25 neurony. Aktivační funkce v obou vrstvách je ReLu.
 
 % --------------------------------------------------------------------
 
 \section{Experimenty a výsledky (2–3 strany)}
-\begin{itemize}[leftmargin=*]
-    \item Oddělení trénovacích, validačních a testovacích dat.
-    \item Baseline, hyperparametrické ladění, cross-validation (pokud vhodné).
-    \item Vybrané metriky:
-    \begin{itemize}
-        \item regrese: MSE, RMSE, MAE, $R^2$, Adjusted $R^2$,
-        \item klasifikace: accuracy, precision, recall, F1, AUC-ROC, confusion matrix.
-    \end{itemize}
-    \item Grafy: průběhy učení, ROC, predikce vs. realita.
-    \item Interpretace výsledků – co znamenají a proč jsou takové.
-\end{itemize}
+
+    Při tréninku jsme použili data z roku 2023. Ty byli rozdělené na trénovací (80\,\% dat) a testovací (20\,\% dat). Následně jsme pak ještě natrénovaný model testovali na datech z jiných let. Jako první jsme vytvořili model s dvěmi skrytými vrstvami se 100 neuronů v první a 50 neurony v druhé vrstvě. Tento model jsme používali při úpravě dat.
+    
+    Při analýze dat jsme si například všimli, že v datech často chybí značka vozidla a čas. Když jsme se podívali na to, kdo udělal záznam v řádcích s chybějícími hodnotami, tak jsme zjistili, že se z většiny jednalo o PČR. Například když chyběla značka auta, tak se z 59,4 \,\% jednalo o PČR, Když si vezmeme že rozložení záznamů PČR a MPP je v datech 1:11, tak se zdá že absence údajů je vlastně dobrý ukazatel toho, zda se jedná o PČR či nikoliv. Přidali jsme sloupce \texttt{MISSING\_TIME} a \texttt{MISSING\_BRAND}. Výsledky ale byli horší než když jsme jen do sloupců \texttt{HOUR} dali hodnotu -1 a \texttt{CAR\_TYPE} dali hodnotu \texttt{UNSPECIFIED}. Řádky s chybějícím časem a značkou auta jsme i zkusili odstranit a natrénovat model na datech bez nich. Model pak na datech pro rok 2023 a 2024 měl přesnost 99.9 \,\%. Pro rok 2022 ale jen 92 \,\%.
+
+    Následně jsme zkusili měnit počet neuronů a vrstev a rozšířili jsme testovací data ještě o roky 2021 a 2020. Zkusili jsme natrénovat model s jednou skrytou vrstvou o 50 a poté o 100 neuronech. Následně modely s dvěmi vrstvami, jeden model o 50 neuronech v první skryté vrtsvě a 25 v druhé a jeden s původními 100 neurony v první vrstvě a 50 v druhé. 
+    
+    Všechny modely měli přesnost 99 \,\% při určování záznamů od MPP ale při určování PČR byla přesnost u některých modelů výrazně nižší (nejhorší 61 \,\% měl model s jednou skrytou vrstvou na datech z roku 2022). Graf Přesnosti na třídě PČR vidíme na obrázku níže.
+    
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[width=1\linewidth]{Code_Generated_Image.png}
+        \caption{Graf přesnosti na třídě PČR}
+        \label{fig:placeholder}
+    \end{figure}
+
+    nejlepších výsledků dosáhl model s 50 neurony v první a 25 neurony v druhé vrstvě.
+\begin{table}[h!]
+    \centering
+    \caption{Přesnost modelů}
+    \label{tab:precision_mode}
+    % Změna definice sloupců:
+    % | - svislá čára
+    % >{\bfseries}c - tento sloupec (c) bude automaticky tučný
+    \begin{tabular}{l|c c c c}
+        \textbf{Rok} & \textbf{Model (50)} & \textbf{Model (100)} & \textbf{Model (100, 50)} & \textbf{Model (50, 25)} \\
+        \hline
+        2024 & 0.95 & 0.96 & 0.89 & \textbf{0.95} \\
+        \hline
+        2023 - trénink & 0.99 & 0.99 & 0.99 & \textbf{0.99} \\
+        \hline
+        2022 & 0.61 & 0.82 & 0.83 & \textbf{0.96} \\
+        \hline
+        2021 & 0.73 & 0.88 & 0.84 & \textbf{0.97} \\
+        \hline
+        2020 & 0.77 & 0.89 & 0.86 & \textbf{0.97} \\
+    \end{tabular}
+\end{table}
+
+% Requires: \usepackage{multirow}
+\begin{table}[h]
+    \centering
+    \caption{výsledky modelu(50,25)}
+    \label{tab:placeholder_label}
+    \begin{tabular}{lcccc}
+        \textbf{Rok} & \textbf{Precision (PČR)} & \textbf{Recall (PČR)} & \textbf{F1-Score (PČR)} & \textbf{přesnost} \\
+        \hline
+        2024 & 0.95 & 0.94 & 0.95 & 99 \% \\
+        \hline
+        2023 (Trénink) & 0.99 & 0.96 & 0.98 & 100 \% \\
+        \hline
+        2022 & 0.96 & 0.93 & 0.95 & 99 \% \\
+        \hline
+        2021 & 0.97 & 0.89 & 0.93 & 98 \% \\
+        \hline
+        2020 & 0.97 & 0.89 & 0.93 & 99 \% \\
+        
+    \end{tabular}
+\end{table}
+
+
+
+
 
 % --------------------------------------------------------------------
 
