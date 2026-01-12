@@ -19,7 +19,7 @@ print("Processing data...")
 df_clean = process_data(df_orig)"""
 
 # or load already cleaned data
-df_clean = pd.read_csv("2024_clean.csv")
+df_clean = pd.read_csv("2020_clean.csv")
 
 # Store the actual values for later comparison
 reality_text = df_clean["OZNAM"]

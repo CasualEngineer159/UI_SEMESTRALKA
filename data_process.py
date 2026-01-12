@@ -166,9 +166,9 @@ def process_data(df):
         return df[cols_to_keep]
 
 
-"""print("loading data...")
+'''print("loading data...")
 raw_df = pd.read_csv("MHMP_dopravni_prestupky_2024.csv")
 
 print("clearing data...")
 df_clean = process_data(raw_df)
-df_clean.to_csv("2024_clean.csv")"""
+df_clean.to_csv("2024_clean.csv")'''

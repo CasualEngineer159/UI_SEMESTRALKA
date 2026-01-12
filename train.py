@@ -32,7 +32,7 @@ X_encoded = pd.get_dummies(X_raw, drop_first=True)
 model_columns = list(X_encoded.columns)
 
 # 4. Split and Scale
-X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, stratify=y, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, stratify=y, random_state=123)
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 
