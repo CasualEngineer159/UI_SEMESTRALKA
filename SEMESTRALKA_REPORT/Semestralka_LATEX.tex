@@ -58,7 +58,7 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
 \end{itemize}
 
 % --------------------------------------------------------------------
-
+\newpage
 \section{Úvod}
 
 \begin{itemize}
@@ -85,13 +85,15 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
     % 1. BOD: PŮVOD DAT
     \item \textbf{Původ dat (zdroj a odkazy)}
     
-    Data pocházejí z~portálu Open Data hlavního města Prahy a jsou vedena pod názvem \emph{Dopravní přestupky MHMP}. Pro trénování modelu byla zvolena data z~roku 2023, zatímco pro validaci a testování byly využity sady z~let 2022 a 2024.
-    
+    Data pocházejí z~portálu Open Data hlavního města Prahy a jsou vedena pod názvem \emph{Dopravní přestupky MHMP}. Pro trénování modelu byla zvolena data z~roku 2023, zatímco pro validaci a testování byly využity sady z~let 2022 a 2024. dodatečně jsme pak použili data z roků 2021 a 2020 pro další testování.
+\newpage
     \noindent \textbf{Odkazy na zdroje:}
     \begin{itemize}
-        \item Rok 2022: \href{https://opendata.praha.eu/dataset/dopravni-prestupky-mhmp-2022}{Dopravní přestupky MHMP 2022}
-        \item Rok 2023: \href{https://opendata.praha.eu/dataset/dopravni-prestupky-mhmp-2023}{Dopravní přestupky MHMP 2023}
-        \item Rok 2024: \href{https://opendata.praha.eu/dataset/dopravni-prestupky-mhmp-2024}{Dopravní přestupky MHMP 2024}
+        \item Rok 2024: \href{https://opendata.praha.eu/datasets/https%3A%2F%2Fapi.opendata.praha.eu%2Flod%2Fcatalog%2F8887b335-4108-447d-9b86-0729fd06913e}{Dopravní přestupky MHMP 2024}
+        \item Rok 2023: \href{https://opendata.praha.eu/datasets/https%3A%2F%2Fapi.opendata.praha.eu%2Flod%2Fcatalog%2F1aba6dfc-0662-4dca-9326-07698e9af0fb}{Dopravní přestupky MHMP 2023}
+        \item Rok 2022: \href{https://opendata.praha.eu/datasets/https%3A%2F%2Fapi.opendata.praha.eu%2Flod%2Fcatalog%2Fa6893355-51fc-4904-89cd-716a4588abed}{Dopravní přestupky MHMP 2022}
+        \item Rok 2022: \href{https://opendata.praha.eu/datasets/https%3A%2F%2Fapi.opendata.praha.eu%2Flod%2Fcatalog%2F7e4143f3-567e-425e-86bf-0cb92b08f1e3}{Dopravní přestupky MHMP 2021}
+        \item Rok 2022: \href{https://opendata.praha.eu/datasets/https%3A%2F%2Fapi.opendata.praha.eu%2Flod%2Fcatalog%2Fd7468a8b-0ef0-425d-bc21-d4193055b195}{Dopravní přestupky MHMP 2020}
     \end{itemize}
 
     % 2. BOD: ATRIBUTY, VELIKOST, ČAS
@@ -99,6 +101,7 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
     
     Datasety pokrývají období od ledna 2022 do června 2024. Sady z~let 2022 a 2023 obsahují záznamy za celých 12 měsíců, dataset z~roku 2024 obsahuje data pouze za první polovinu roku. Celkový přehled uvádí Tabulka~\ref{tab:pocty_zaznamu}.
     
+
     \begin{table}[h!]
         \centering
         \caption{Přehled počtu záznamů v~jednotlivých letech}
@@ -107,15 +110,17 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
             \hline
             \textbf{Dataset} & \textbf{Časové pokrytí} & \textbf{Počet záznamů} \\
             \hline
+            MHMP 2020 & Leden -- Prosinec & 562\,348 \\
+            MHMP 2021 & Leden -- Prosinec & 665\,824 \\
             MHMP 2022 & Leden -- Prosinec & 846\,832 \\
             MHMP 2023 & Leden -- Prosinec & 946\,701 \\
             MHMP 2024 & Leden -- Červen & 372\,084 \\
             \hline
-            \textbf{Celkem} & & \textbf{2\,165\,617} \\
+            \textbf{Celkem} & & \textbf{3\,393\,789} \\
             \hline
         \end{tabular}
     \end{table}
-
+    
     Každý záznam reprezentuje jeden evidovaný přestupek. Mezi klíčové atributy patří:
     \begin{description}
         \item[Časové údaje:] Datum (\emph{2022-04-15}) a Čas (\emph{09:14}).
@@ -125,6 +130,7 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
     \end{description}
 
     % 3. BOD: EXPLORATORNÍ ANALÝZA
+\newpage
     \item \textbf{Exploratorní analýza: statistiky, distribuce a grafy}
     
     Analýza provedená na datech z~roku 2023 odhalila následující charakteristiky:
@@ -163,13 +169,13 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
     % 5. BOD: PROFILING
     \item \textbf{Profil dat (ydata-profiling)}
     
-    Detailní automaticky generovaný profil datové sady vytvořený nástrojem \texttt{ydata-profiling} je přiložen v~Příloze~A.
+    Detailní generovaný profil datové sady je přiložen v~příloze.
 
 \end{itemize}
 
 
 % --------------------------------------------------------------------
-
+\newpage
 \section{Formulace cíle}
 \begin{itemize}[leftmargin=*]
     \item \textbf{Přesná formulace predikčního/klasifikačního cíle.}
@@ -178,7 +184,7 @@ Celkový doporučený rozsah textu je \emph{8–12 stran bez příloh}.  \\
     \item \textbf{Typ úlohy a zdůvodnění výběru metody.}
 
     Z hlediska strojového učení se jedná o úlohu učení s učitelem, konkrétně o binární klasifikaci.
-    Pro řešení úlohy byla zvolena metoda Vícevrstvého perceptronu. Předpokládáme že vztahy mezi vstupními daty a cílovou třídou jsou komplikované ale je v nich možné najít nějaký pattern, na základě kterého se policie pohybuje. Například ulice "Evropská" může implikovat PČR v noci (měření rychlosti), ale MPP ve dne (parkování). proto jsme zvolili metodu MLP která by tyto vztahy mohla najít.
+    Pro řešení úlohy byla zvolena metoda Vícevrstvého perceptronu. Předpokládáme že vztahy mezi vstupními daty a cílovou třídou jsou komplikované ale je v nich možné najít nějaký vzor, na základě kterého se policie pohybuje. Například ulice "Evropská" může implikovat PČR v noci (měření rychlosti), ale MPP ve dne (parkování). proto jsme zvolili metodu MLP která by tyto vztahy mohla najít.
     
 \end{itemize}
 
@@ -244,25 +250,25 @@ Tato kapitola popisuje technické kroky vedoucí k transformaci surových dat do
 
     Základním stavebním kamenem je umělý neuron, který provádí vážený součet svých vstupů, přičítá k němu prahovou hodnotu (bias) a výsledek transformuje pomocí nelineární aktivační funkce. Díky vrstvení těchto neuronů a použití nelinearit je MLP schopen aproximovat i velmi složité rozhodovací hranice v mnohadimenzionálním prostoru příznaků, což je pro naše kategorická data klíčové.
     
-    My jsme pro vytvoření modelu jsme použili knihovnu \texttt{scikit-learn} a třídu \texttt{MLPClassifier}. Na základě experimentů s počtem neuronů a skrytých vrstev byla zvolena arhitektura s dvěmi skrytými vrtsvami. První skrytá vrstva s 50 neurony a druhá s 25 neurony. Aktivační funkce v obou vrstvách je ReLu.
+    My jsme pro vytvoření modelu jsme použili knihovnu \texttt{scikit-learn} a třídu \texttt{MLPClassifier}. Na základě experimentů s počtem neuronů a skrytých vrstev byla zvolena architektura s dvěmi skrytými vrstvami. První skrytá vrstva s 50 neurony a druhá s 25 neurony. Aktivační funkce v obou vrstvách je ReLu.
 
 % --------------------------------------------------------------------
 
-\section{Experimenty a výsledky (2–3 strany)}
+\section{Experimenty a výsledky}
 
-    Při tréninku jsme použili data z roku 2023. Ty byli rozdělené na trénovací (80\,\% dat) a testovací (20\,\% dat). Následně jsme pak ještě natrénovaný model testovali na datech z jiných let. Jako první jsme vytvořili model s dvěmi skrytými vrstvami se 100 neuronů v první a 50 neurony v druhé vrstvě. Tento model jsme používali při úpravě dat.
+    Při tréninku jsme použili data z roku 2023. Ty byla rozdělené na trénovací (80\,\% dat) a testovací (20\,\% dat). Následně jsme pak ještě natrénovaný model testovali na datech z jiných let. Jako první jsme vytvořili model se dvěma skrytými vrstvami se 100 neuronů v první a 50 neurony v druhé vrstvě. Tento model jsme používali při úpravě dat.
     
-    Při analýze dat jsme si například všimli, že v datech často chybí značka vozidla a čas. Když jsme se podívali na to, kdo udělal záznam v řádcích s chybějícími hodnotami, tak jsme zjistili, že se z většiny jednalo o PČR. Například když chyběla značka auta, tak se z 59,4 \,\% jednalo o PČR, Když si vezmeme že rozložení záznamů PČR a MPP je v datech 1:11, tak se zdá že absence údajů je vlastně dobrý ukazatel toho, zda se jedná o PČR či nikoliv. Přidali jsme sloupce \texttt{MISSING\_TIME} a \texttt{MISSING\_BRAND}. Výsledky ale byli horší než když jsme jen do sloupců \texttt{HOUR} dali hodnotu -1 a \texttt{CAR\_TYPE} dali hodnotu \texttt{UNSPECIFIED}. Řádky s chybějícím časem a značkou auta jsme i zkusili odstranit a natrénovat model na datech bez nich. Model pak na datech pro rok 2023 a 2024 měl přesnost 99.9 \,\%. Pro rok 2022 ale jen 92 \,\%.
+    Při analýze dat jsme si například všimli, že v datech často chybí značka vozidla a čas. Když jsme se podívali na to, kdo udělal záznam v řádcích s chybějícími hodnotami, tak jsme zjistili, že se z většiny jednalo o PČR. Například když chyběla značka auta, tak se z 59,4 \,\% jednalo o PČR, Když si vezmeme že rozložení záznamů PČR a MPP je v datech 1:11, tak se zdá že absence údajů je vlastně dobrý ukazatel toho, zda se jedná o PČR či nikoliv. Přidali jsme sloupce \texttt{MISSING\_TIME} a \texttt{MISSING\_BRAND}. Výsledky ale byly horší než když jsme jen do sloupců \texttt{HOUR} dali hodnotu -1 a \texttt{CAR\_TYPE} dali hodnotu \texttt{UNSPECIFIED}. Řádky s chybějícím časem a značkou auta jsme i zkusili odstranit a natrénovat model na datech bez nich. Model pak na datech pro rok 2023 a 2024 měl přesnost 99.9 \,\%. Pro rok 2022 ale jen 92 \,\%.
 
-    Následně jsme zkusili měnit počet neuronů a vrstev a rozšířili jsme testovací data ještě o roky 2021 a 2020. Zkusili jsme natrénovat model s jednou skrytou vrstvou o 50 a poté o 100 neuronech. Následně modely s dvěmi vrstvami, jeden model o 50 neuronech v první skryté vrtsvě a 25 v druhé a jeden s původními 100 neurony v první vrstvě a 50 v druhé. 
+    Následně jsme zkusili měnit počet neuronů a vrstev a rozšířili jsme testovací data ještě o roky 2021 a 2020. Zkusili jsme natrénovat model s jednou skrytou vrstvou o 50 a poté o 100 neuronech. Následně modely se dvěma vrstvami, jeden model o 50 neuronech v první skryté vrstvě a 25 v druhé a jeden s původními 100 neurony v první vrstvě a 50 v druhé. 
     
-    Všechny modely měli přesnost 99 \,\% při určování záznamů od MPP ale při určování PČR byla přesnost u některých modelů výrazně nižší (nejhorší 61 \,\% měl model s jednou skrytou vrstvou na datech z roku 2022). Graf Přesnosti na třídě PČR vidíme na obrázku níže.
+    Všechny modely měly přesnost 99 \,\% při určování záznamů od MPP ale při určování PČR byla přesnost u některých modelů výrazně nižší (nejhorší 61 \,\% měl model s jednou skrytou vrstvou na datech z roku 2022). Graf Přesnosti na třídě PČR vidíme na obrázku ~\ref{fig:precision_graph} níže.
     
     \begin{figure}[h!]
         \centering
-        \includegraphics[width=1\linewidth]{precision graph.png}
+        \includegraphics[width=1\linewidth]{precision_graph.png}
         \caption{Graf přesnosti na třídě PČR}
-        \label{fig:placeholder}
+        \label{fig:precision_graph}
     \end{figure}
 
     nejlepších výsledků dosáhl model s 50 neurony v první a 25 neurony v druhé vrstvě.
@@ -276,46 +282,44 @@ Tato kapitola popisuje technické kroky vedoucí k transformaci surových dat do
     \begin{tabular}{l|c c c c}
         \textbf{Rok} & \textbf{Model (50)} & \textbf{Model (100)} & \textbf{Model (100, 50)} & \textbf{Model (50, 25)} \\
         \hline
-        2024 & 0.95 & 0.96 & 0.89 & \textbf{0.95} \\
+        2024 & 0.95 & 0.96 & 0.89 & \textbf{0.99} \\
         \hline
         2023 - trénink & 0.99 & 0.99 & 0.99 & \textbf{0.99} \\
         \hline
-        2022 & 0.61 & 0.82 & 0.83 & \textbf{0.96} \\
+        2022 & 0.61 & 0.82 & 0.83 & \textbf{0.99} \\
         \hline
-        2021 & 0.73 & 0.88 & 0.84 & \textbf{0.97} \\
+        2021 & 0.73 & 0.88 & 0.84 & \textbf{0.94} \\
         \hline
-        2020 & 0.77 & 0.89 & 0.86 & \textbf{0.97} \\
+        2020 & 0.77 & 0.89 & 0.86 & \textbf{0.98} \\
     \end{tabular}
 \end{table}
 
 % Requires: \usepackage{multirow}
-\begin{table}[h]
+\begin{table}[h!]
     \centering
     \caption{výsledky modelu(50,25)}
     \label{tab:placeholder_label}
     \begin{tabular}{lcccc}
         \textbf{Rok} & \textbf{Precision (PČR)} & \textbf{Recall (PČR)} & \textbf{F1-Score (PČR)} & \textbf{přesnost} \\
         \hline
-        2024 & 0.95 & 0.94 & 0.95 & 99 \% \\
+        2024 & 0.9707 & 0.9460 & 0.9582 & 0.9950 \\
         \hline
-        2023 (Trénink) & 0.99 & 0.96 & 0.98 & 100 \% \\
+        2023 (Trénink) & 0.9917 & 0.9593 & 0.9753 & 0.9959 \\
         \hline
-        2022 & 0.96 & 0.93 & 0.95 & 99 \% \\
+        2022 & 0.9329 & 0.9306 & 0.9317 & 0.9899 \\
         \hline
-        2021 & 0.97 & 0.89 & 0.93 & 98 \% \\
+        2021 & 0.9096 & 0.6135 & 0.7372 & 0.9443 \\
         \hline
-        2020 & 0.97 & 0.89 & 0.93 & 99 \% \\
+        2020 & 0.9443 & 0.9019 & 0.9226 & 0.9846 \\
         
     \end{tabular}
 \end{table}
 
 
-
-
-
 % --------------------------------------------------------------------
+\clearpage
 
-\section{Diskuse (1 strana)}
+\section{Diskuse}
 V této části rozebíráme, proč náš model funguje, jaké má výsledky a na co jsme během práce přišli.
 
 \begin{itemize}[leftmargin=*]
@@ -324,14 +328,14 @@ V této části rozebíráme, proč náš model funguje, jaké má výsledky a n
     Největším problémem datasetu byla nevyváženost počtu záznamů PČR a MPP (11:1), což by mohlo vést k tomu, že by se model nenaučil specifické odlišnosti záznamů PČR, ale naučil by se bezhlavě hádat MPP s vizí úspěšnosti nad 90\%. S tímto problémem si ale model se dvěma vrstvami (50 a 20 neuronů) poradil, což lze pozorovat na základě těchto metrik pro rok 2024:
     
     \begin{itemize}
-        \item \textbf{Precision (0,95):} Tato metrika říká, že v případech kde model označil záznam jako PČR, tak se v 95\% trefil. Pokud by se model snažil násilně vyhledávat PČR, mohlo by vzniknout více případů FP (false positive), k tomu však nedošlo.
-        \item \textbf{Recall (0,94):} Recall 94\% pro třídu PČR znamená, že z celkového počtu záznamů PČR v datasetu jich model objevil 94\%. Pokud by model raději označoval MPP kvůli jejich velkému zastoupení, bylo by číslo nižší.
-        \item \textbf{F1-Score (0,95):} Parametr F1-Score je harmonickým průměrem parametrů Precision a Recall. Nízká hodnota by mohla naznačovat náchylnost vůči datové nevyváženosti. Tento výsledek ale ukazuje, že náš model je proti ní velmi naopak velmi odolný.
+        \item \textbf{Precision (0,97):} Tato metrika říká, že v případech kde model označil záznam jako PČR, tak se v 97\% trefil. Pokud by se model snažil násilně vyhledávat PČR, mohlo by vzniknout více případů FP (false positive), k tomu však nedošlo.
+        \item \textbf{Recall (0,95):} Recall 95\% pro třídu PČR znamená, že z celkového počtu záznamů PČR v datasetu jich model objevil 95\%. Pokud by model raději označoval MPP kvůli jejich velkému zastoupení, bylo by číslo nižší.
+        \item \textbf{F1-Score (0,96):} Parametr F1-Score je harmonickým průměrem parametrů Precision a Recall. Nízká hodnota by mohla naznačovat náchylnost vůči datové nevyváženosti. Tento výsledek ale ukazuje, že náš model je proti ní velmi naopak velmi odolný.
     \end{itemize}
     Tyto hodnoty ukazují, že se nám podařilo vyřešit problém s nevyvážeností dat. Model nehádá jen naslepo většinovou třídu, ale skutečně se naučil poznat specifika státní policie.
 
     Další silnou stránkou modelu je, že je použitelný na záznamech ve velkém časovém rozpětí (rok 2020 až polovina roku 2024). To ukazuje že model zachytil hlubší závislosti než jen nějaké krátkodobé trendy jednoho roku. Naopak problémovou stránkou je, že model pravděpodobně velmi spoléhá pro rozpoznání PČR na neúplnost dat (PČR často nechává některá pole prázdná). Pokud by PČR změnila své návyky a začala lépe udržovat záznamy, model už by možná nebyl použitelný.
-
+\newpage
     \item \textbf{Co fungovalo a co ne, a proč.}
     
     Klíčem k úspěchu bylo nemazat neúplné řádky. Původně jsme například chtěli data s chybějícím časem vyhodit, ale ukázalo se, že právě prázdná políčka nejlépe prozrazují PČR. 
@@ -339,7 +343,7 @@ V této části rozebíráme, proč náš model funguje, jaké má výsledky a n
 
     \item \textbf{Možné alternativy a budoucí vylepšení.}
     
-    Nevýhodou neuronové sítě je že nevidíme přesně, proč se rozhodla tak jak se rozhodla. Není proto možné z výsledů s jistotou vyčíst nějaký patern pro rozdělení. Kdybychom chtěli větší transparentnost, mohli bychom příště zkusit \textbf{Rozhodovací stromy (Decision Trees)}. Ty by nám formou diagramu přesně ukázaly pravidla (např. „pokud chybí čas $\to$ je to PČR“), což by bylo pro vysvětlování chování policie srozumitelnější.
+    Nevýhodou neuronové sítě je že nevidíme přesně, proč se rozhodla tak jak se rozhodla. Není proto možné z výsledků s jistotou vyčíst nějaký patern pro rozdělení. Kdybychom chtěli větší transparentnost, mohli bychom příště zkusit \textbf{Rozhodovací stromy (Decision Trees)}. Ty by nám formou diagramu přesně ukázaly pravidla (např. „pokud chybí čas $\to$ je to PČR“), což by bylo pro vysvětlování chování policie srozumitelnější.
 
     Dalším vylepšením by mohlo být důkladnější zpracování dat. Například místo je určeno jednoduchým vyhledáváním klíčových slov jako je "tunel", "spojka" atd. Důmyslnějším rozdělením by třeba bylo možné lokaci rozdělit lépe a vyčíst nějaké další příznaky. 
 \end{itemize}
@@ -354,7 +358,7 @@ V této části rozebíráme, proč náš model funguje, jaké má výsledky a n
     
     Úkolem práce bylo zpracovat data a natrénovat model schopný automaticky klasifikovat původce přestupku a rozlišit mezi Městskou policií a Policií ČR. K tomuto účelu jsme využili vícevrstvou neuronovou síť (MLP). Jako nejefektivnější se po sérii experimentů ukázal model se dvěma skrytými vrstvami o velikosti 50 a 25 neuronů.
     
-    Tento model konzistentně dosahuje na datech od roku 2020 po rok 2024 přesnost nad 98\%. V letech 2020, 2022 a 2024 dokonce nad 99\%. Vysoká hodnota F1-skóre (0,95) potvrzuje, že model je spolehlivý i při detekci menšinové třídy PČR a netrpí tendencí ignorovat méně časté záznamy.
+    Tento model konzistentně dosahuje na datech od roku 2020 po rok 2024 přesnost nad 98\%. Vysoká hodnota F1-skóre (0,95) potvrzuje, že model je spolehlivý i při detekci menšinové třídy PČR a netrpí tendencí ignorovat méně časté záznamy.
 
     \item \textbf{Splnění cílů práce.}
     
@@ -375,25 +379,23 @@ V této části rozebíráme, proč náš model funguje, jaké má výsledky a n
 \newpage
 
 \section*{Prohlášení o využití generativní AI (pokud relevantní)}
-Tato sekce je povinná pouze v případě, že byla při zpracování projektu využita generativní umělá inteligence.
-\
-\textbf{Vzorové prohlášení:}
-\
+
 \begin{quote}
-V rámci vypracování této semestrální práce jsme využili nástroje generativní umělé inteligence (např. ChatGPT, Gemini, Mistral, GitHub Copilot) k následujícím účelům: \
+V rámci vypracování této semestrální práce jsme využili nástroje generativní umělé inteligence (např. ChatGPT, Gemini, Mistral, GitHub Copilot) k následujícím účelům:
+
 \begin{itemize}
     \item konzultace teoretického postupu a ověření správnosti vysvětlení,
     \item návrh části kódu / kontrola kódu,
     \item jazyková korektura textu.
 \end{itemize}
+
 Veškerým použitým postupům, kódu i interpretaci výsledků rozumíme a jsme schopni je samostatně vysvětlit v rámci ústního zkoušení. Současně bereme na vědomí, že plně odpovídáme za správnost obsahu, výpočtů, kódu i závěrů uvedených v této práci.
 \end{quote}
 
 \section*{Přílohy}
 \begin{itemize}[leftmargin=*]
-    \item Výstupy profilování dat.
-    \item Vybrané části kódu.
-    \item Dodatečné grafy a tabulky.
+    \item \textbf{Výstup profilování dat} (ydata-profiling): \texttt{vystup\_report.html}
+    \item \textbf{Vybrané části kódu}: \texttt{data\_process.py}, \texttt{train.py}, \texttt{predict.py}
 \end{itemize}
 
 \end{document}
