@@ -18,6 +18,7 @@ df_orig = pd.read_csv("MHMP_dopravni_prestupky_2021.csv")
 print("Processing data...")
 df_clean = process_data(df_orig)"""
 
+# or load already cleaned data
 df_clean = pd.read_csv("2024_clean.csv")
 
 # Store the actual values for later comparison
@@ -86,7 +87,6 @@ if not errors.empty:
 else:
     print("Congratulations! The model made zero errors.")
 
-print("\n--- DETAILNÍ CLASSIFICATION REPORT ---")
-# Porovnáme sloupec se skutečností vs. sloupec s předpovědí
+print("\n--- DETAIL CLASSIFICATION REPORT ---")
 print(classification_report(results["ACTUAL"], results["PREDICTED"], digits=4))
 print("==========================================\n")
