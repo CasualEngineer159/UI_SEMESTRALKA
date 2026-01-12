@@ -49,7 +49,7 @@ def get_day_time(h):
 def get_law(text):
     # find what law was broken
     if not isinstance(text, str):
-        return "OTHER"
+        return "other"
 
     text = text.lower().strip()
 
@@ -57,7 +57,7 @@ def get_law(text):
     # look for number or char on the beginning or after §
     paragraph_match = re.search(r'(?:§\s*|^)?(\d+[a-z]?)', text)
     if not paragraph_match:
-        return "OTHER"
+        return "other"
 
     # save the base (e.g. "125c")
     result = paragraph_match.group(1)
@@ -71,6 +71,12 @@ def get_law(text):
 
     return result
 
+def get_country(text, limit =0.001):
+    counts = text.value_counts(normalize=True)
+    valid_countries = counts[counts >= limit].index
+    result = text.where(text.isin(valid_countries), "other")
+    return result.mask(text.isna(), "UNSPECIFIED")
+
 
 def get_prague_district(n):
     # returns prague districts
@@ -79,7 +85,7 @@ def get_prague_district(n):
         parts = n.split(" ")
         if len(parts) > 1 and parts[1].isdigit():
             return "Praha " + parts[1]
-    return "Praha - Ostatní"
+    return "Praha - other"
 
 
 def get_place_type(text):
@@ -114,7 +120,7 @@ def extract_car_brand(text):
     for car in CARS_LIST:
         if car.lower() in text.lower():
             return car
-    return "OTHER"
+    return "other"
 
 
 # --- main function for processing ---
@@ -130,10 +136,8 @@ def process_data(df):
     df["SEASON"] = df["MONTH_NUM"].apply(get_season)
     df["HOUR"] = temp_times.dt.hour.fillna(-1).astype(int)
     df["DAY_TIME"] = df["HOUR"].apply(get_day_time)
-    """
-    df["MISSING_TIME"] = (df["HOUR"] == -1).astype(int)
-    """
 
+    df["COUNTRY"] = get_country(df["MPZ"])
     # prague district
     df["PRAGUE"] = df["PRAHA"].apply(get_prague_district)
 
@@ -141,9 +145,6 @@ def process_data(df):
 
     # car brand
     df["CAR_TYPE"] = df["TOVZN"].apply(extract_car_brand)
-    """
-    df["MISSING_BRAND"] = (df["CAR_TYPE"] == "UNSPECIFIED").astype(int)
-    """
 
     # law
     df["LAW_CLEAN"] = df["PRAVFOR"].apply(get_law)
@@ -152,12 +153,6 @@ def process_data(df):
     df["IS_FIRM"] = (df["FIRMA"] == "ANO").astype(int)
 
     # column list that goes to the training
-    """
-    cols_to_keep = [
-        "SEASON", "DAY_TIME", "MISSING_TIME", "PRAGUE",
-        "CAR_TYPE", "MISSING_BRAND", "LAW_CLEAN", "IS_FIRM"
-    ]
-    """
 
     cols_to_keep = [
         "SEASON", "DAY_TIME", "PRAGUE", "PLACE_TYPE",
@@ -169,3 +164,11 @@ def process_data(df):
         return df[cols_to_keep + ["OZNAM"]]
     else:
         return df[cols_to_keep]
+
+
+"""print("Načítám data...")
+raw_df = pd.read_csv("MHMP_dopravni_prestupky_2024.csv")
+
+print("Čistím data...")
+df_clean = process_data(raw_df)
+df_clean.to_csv("2024_clean.csv")"""

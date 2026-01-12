@@ -1,6 +1,7 @@
 import pandas as pd
 import joblib
 from data_process import process_data
+from sklearn.metrics import classification_report, confusion_matrix
 
 # load model and artifacts
 print("Loading model and tools...")
@@ -10,12 +11,14 @@ model_columns = joblib.load('model_columns.pkl')
 le = joblib.load('model_le.pkl')  # LabelEncoder (maps 0/1 back to class names)
 
 # load original dataset
-print("Loading dataset...")
-df_orig = pd.read_csv("MHMP_dopravni_prestupky_2024.csv")
+"""print("Loading dataset...")
+df_orig = pd.read_csv("MHMP_dopravni_prestupky_2021.csv")
 
 # process data
 print("Processing data...")
-df_clean = process_data(df_orig)
+df_clean = process_data(df_orig)"""
+
+df_clean = pd.read_csv("2024_clean.csv")
 
 # Store the actual values for later comparison
 reality_text = df_clean["OZNAM"]
@@ -82,3 +85,8 @@ if not errors.empty:
     print("\nList of all errors saved to 'model_errors.csv'.")
 else:
     print("Congratulations! The model made zero errors.")
+
+print("\n--- DETAILNÍ CLASSIFICATION REPORT ---")
+# Porovnáme sloupec se skutečností vs. sloupec s předpovědí
+print(classification_report(results["ACTUAL"], results["PREDICTED"], digits=4))
+print("==========================================\n")

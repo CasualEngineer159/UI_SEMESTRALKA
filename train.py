@@ -1,16 +1,21 @@
 import pandas as pd
 import joblib
+import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from data_process import process_data # Importujeme naši knihovnu!
+from sklearn.metrics import classification_report, confusion_matrix
+from data_process import process_data
 
 # 1. load data and process them
-print("Načítám data...")
+"""print("Načítám data...")
 raw_df = pd.read_csv("MHMP_dopravni_prestupky_2023.csv")
 
 print("Čistím data...")
-df_clean = process_data(raw_df)
+df_clean = process_data(raw_df)"""
+
+df_clean = pd.read_csv("2023_clean.csv")
 
 # 2. prepare X and y
 X_raw = df_clean.drop(columns=["OZNAM"])
@@ -27,13 +32,14 @@ X_encoded = pd.get_dummies(X_raw, drop_first=True)
 model_columns = list(X_encoded.columns)
 
 # 4. Split and Scale
-X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, stratify=y, random_state=42)
+print("Rozměr trénovacích dat:", X_train.shape)
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 
 # 5. Training
 print("Trénuji MLP...")
-mlp = MLPClassifier(hidden_layer_sizes=(40, 20), max_iter=200, random_state=42)
+mlp = MLPClassifier(hidden_layer_sizes=(50, 25), max_iter=50, random_state=42)
 mlp.fit(X_train_scaled, y_train)
 print(f"Trénink hotov. Skóre na testu: {mlp.score(scaler.transform(X_test), y_test):.4f}")
 
@@ -45,3 +51,19 @@ joblib.dump(scaler, 'model_scaler.pkl')
 joblib.dump(model_columns, 'model_columns.pkl')
 joblib.dump(le, 'model_le.pkl')
 print("HOTOVO.")
+
+# Predikce na testovacích datech
+y_pred = mlp.predict(scaler.transform(X_test))
+
+# Výpis reportu
+print("Detailní report:")
+print(classification_report(y_test, y_pred, target_names=le.classes_))
+
+# Vizuální matice záměn
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=le.classes_, yticklabels=le.classes_)
+plt.xlabel('Předpověď modelu')
+plt.ylabel('Skutečnost')
+plt.title('Matice záměn')
+plt.show()
